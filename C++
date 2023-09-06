@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <locale>
+
+using namespace std;
+
+class Baggage 
+{
+public:
+    Baggage(int weight, const string& description) : weight_(weight), description_(description) {}
+
+    int GetWeight() const 
+    {
+        return weight_;
+    }
+
+    const string& GetDescription() const 
+    {
+        return description_;
+    }
+
+private:
+    int weight_;
+    string description_;
+};
+
+class Passenger 
+{
+public:
+    Passenger(const string& name) : name_(name) {}
+
+    void AddBaggage(const Baggage& baggage) 
+    {
+        baggage_.push_back(baggage);
+    }
+
+    const vector<Baggage>& GetBaggage() const 
+    {
+        return baggage_;
+    }
+
+    const string& GetName() const 
+    {
+        return name_;
+    }
+
+private:
+    string name_;
+    vector<Baggage> baggage_;
+};
+
+class Flight 
+{
+public:
+    Flight(const string& flightNumber) : flightNumber_(flightNumber) {}
+
+    void AddPassenger(const Passenger& passenger) 
+    {
+        passengers_.push_back(passenger);
+    }
+
+    void DisplayPassengerBaggage() const 
+    {
+        cout << "Багаж на авiарейсi " << flightNumber_ << ":" << endl;
+        for (const Passenger& passenger : passengers_) 
+        {
+            cout << "Пасажир: " << passenger.GetName() << endl;
+            const vector<Baggage>& baggage = passenger.GetBaggage();
+            for (const Baggage& item : baggage) 
+            {
+                cout << "  Багаж: " << item.GetDescription() << ", Вага: " << item.GetWeight() << " кг" << endl;
+            }
+        }
+    }
+
+private:
+    string flightNumber_;
+    vector<Passenger> passengers_;
+};
+
+int main() 
+{
+    setlocale(LC_ALL, "Ukrainian"); 
+
+    Flight flight("AA123");
+
+    Passenger passenger1("Петро");
+    passenger1.AddBaggage(Baggage(20, "Великий чемодан"));
+    passenger1.AddBaggage(Baggage(5, "Ручна сумка"));
+
+    Passenger passenger2("Марiя");
+    passenger2.AddBaggage(Baggage(15, "Спортивна сумка"));
+
+    flight.AddPassenger(passenger1);
+    flight.AddPassenger(passenger2);
+
+    flight.DisplayPassengerBaggage();
+
+    return 0;
+}
